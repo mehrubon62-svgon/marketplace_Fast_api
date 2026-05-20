@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+alembic
+pydantic[email]
+python-jose[cryptography]
+bcrypt
+python-dotenv
+redis
+httpx
+sentence-transformers
+numpy
+cerebras-cloud-sdk

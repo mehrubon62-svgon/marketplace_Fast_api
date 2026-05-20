@@ -1,0 +1,22 @@
+# Секреты и окружение
+.env
+.env.local
+
+# Виртуальное окружение
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# БД
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
