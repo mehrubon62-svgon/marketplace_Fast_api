@@ -9,7 +9,6 @@ from fastapi import WebSocket
 
 class ConnectionManager:
     def __init__(self):
-        # user_id -> list of active websocket connections
         self.active: dict[int, list[WebSocket]] = defaultdict(list)
         self._lock = asyncio.Lock()
 

@@ -26,7 +26,6 @@ def update_shipment(db: Session, shipment_id: int, **kwargs):
     return shipment
 
 
-# delivery methods
 def create_delivery_method(db: Session, **kwargs) -> DeliveryMethod:
     dm = DeliveryMethod(**kwargs)
     db.add(dm)

@@ -12,7 +12,6 @@ from modules.ai_agent.agent import run_agent, get_or_create_session
 
 router = APIRouter(prefix="/ai", tags=["AI Agent"])
 
-# Опциональный заголовок Authorization (auto_error=False => без него тоже работает).
 optional_api_key = APIKeyHeader(
     name="Authorization",
     description="Опционально: Bearer <ваш_токен>",

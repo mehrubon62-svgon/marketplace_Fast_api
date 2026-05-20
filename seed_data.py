@@ -60,7 +60,6 @@ def seed():
 
     print("Seeding data...")
 
-    # =============== USERS ===============
     print("Creating users...")
     admin = create_user(db, "admin", "admin@marketplace.com", "admin123", RoleEnum.admin)
 
@@ -99,14 +98,12 @@ def seed():
 
     db.commit()
 
-    # =============== WALLETS: пополняем покупателям ===============
     print("Topping up wallets...")
     for buyer in buyers:
         amount = random.choice([2000, 3000, 5000, 7500, 10000, 15000])
         topup_wallet(buyer.id, amount, f"Пополнение администратором (#seed)")
     db.commit()
 
-    # =============== CATEGORIES (с иерархией) ===============
     print("Creating categories...")
     cat_root = {
         "Электроника": ["Смартфоны", "Ноутбуки", "Аудио", "Аксессуары"],
@@ -131,7 +128,6 @@ def seed():
             categories[sub] = child
     db.commit()
 
-    # =============== BRANDS ===============
     print("Creating brands...")
     brand_names = [
         "Apple", "Samsung", "Xiaomi", "Sony", "Huawei", "Nike", "Adidas", "Puma",
@@ -145,7 +141,6 @@ def seed():
         brands[name] = b
     db.commit()
 
-    # =============== TAGS ===============
     print("Creating tags...")
     tag_names = [
         "новинка", "хит продаж", "распродажа", "premium", "эко", "ручная работа",
@@ -159,10 +154,8 @@ def seed():
         tags[name] = t
     db.commit()
 
-    # =============== LISTINGS (товары) ===============
     print("Creating listings...")
     products_data = [
-        # TechWorld
         (0, "Смартфоны", "Apple", ["новинка", "premium"], "iPhone 15 Pro", "Топовый смартфон Apple A17 Pro, 256GB, ProMotion дисплей", 999.0, 25, "https://picsum.photos/seed/iphone15/600/600"),
         (0, "Смартфоны", "Samsung", ["хит продаж"], "Samsung Galaxy S24 Ultra", "Флагман Samsung с S Pen, 512GB, AI features", 1199.0, 18, "https://picsum.photos/seed/galaxys24/600/600"),
         (0, "Смартфоны", "Xiaomi", ["распродажа"], "Xiaomi 14 Pro", "Камера Leica, Snapdragon 8 Gen 3, 256GB", 799.0, 30, "https://picsum.photos/seed/xiaomi14/600/600"),
@@ -178,7 +171,6 @@ def seed():
         (0, "Аксессуары", "Xiaomi", [], "Xiaomi Mi Band 8", "Фитнес-трекер с AMOLED дисплеем", 49.0, 200, "https://picsum.photos/seed/miband8/600/600"),
         (0, "Аксессуары", "Bosch", [], "Bosch Smart Home Hub", "Центр умного дома Bosch", 199.0, 22, "https://picsum.photos/seed/boschhub/600/600"),
 
-        # Fashion Hub
         (1, "Мужская", "Nike", ["хит продаж"], "Nike Sportswear Tech Fleece Hoodie", "Мужская толстовка из премиум-флиса", 129.0, 60, "https://picsum.photos/seed/nikehoodie/600/600"),
         (1, "Мужская", "Adidas", [], "Adidas Originals Trefoil T-Shirt", "Классическая футболка с логотипом", 39.0, 200, "https://picsum.photos/seed/adidastee/600/600"),
         (1, "Мужская", "Zara", [], "Zara Slim-Fit Wool Suit", "Шерстяной костюм узкого кроя", 299.0, 25, "https://picsum.photos/seed/zarasuit/600/600"),
@@ -191,7 +183,6 @@ def seed():
         (1, "Обувь", "Reebok", [], "Reebok Classic Leather", "Классические белые кроссовки", 79.0, 110, "https://picsum.photos/seed/reebokclassic/600/600"),
         (1, "Детская", "H&M", [], "H&M Kids Denim Jacket", "Детская джинсовая куртка", 35.0, 80, "https://picsum.photos/seed/hmkidsjacket/600/600"),
 
-        # Home Style
         (2, "Кухня", "Bosch", [], "Bosch Series 4 Dishwasher", "Посудомоечная машина 60 см", 599.0, 8, "https://picsum.photos/seed/boschdishwasher/600/600"),
         (2, "Кухня", "Philips", [], "Philips Airfryer XXL", "Аэрогриль 7,3 л", 249.0, 30, "https://picsum.photos/seed/philipsairfryer/600/600"),
         (2, "Кухня", "Dyson", ["premium"], "Dyson V15 Detect", "Беспроводной пылесос с лазерной подсветкой", 749.0, 12, "https://picsum.photos/seed/dysonv15/600/600"),
@@ -201,7 +192,6 @@ def seed():
         (2, "Декор", "IKEA", ["эко"], "IKEA SOLLERÖN Outdoor Sofa", "Садовый диван из ротанга", 399.0, 5, "https://picsum.photos/seed/ikeasofa/600/600"),
         (2, "Кухня", "IKEA", [], "IKEA 365+ Frying Pan", "Сковорода с антипригарным покрытием 28см", 39.0, 80, "https://picsum.photos/seed/ikeapan/600/600"),
 
-        # Sport Zone
         (3, "Фитнес", "Nike", [], "Nike Yoga Mat", "Профессиональный коврик для йоги", 49.0, 60, "https://picsum.photos/seed/nikeyoga/600/600"),
         (3, "Фитнес", "Adidas", [], "Adidas Power Gym Bag", "Спортивная сумка 20л", 39.0, 100, "https://picsum.photos/seed/adidasbag/600/600"),
         (3, "Фитнес", "Reebok", ["профессиональный"], "Reebok Adjustable Dumbbell Set", "Гантели регулируемые 2x24 кг", 299.0, 18, "https://picsum.photos/seed/reebokdumbbells/600/600"),
@@ -210,7 +200,6 @@ def seed():
         (3, "Зимний спорт", None, [], "Salomon QST 99 Skis", "Универсальные горные лыжи 178см", 599.0, 10, "https://picsum.photos/seed/salomonskis/600/600"),
         (3, "Фитнес", "Nike", ["хит продаж"], "Nike Pro Compression Shorts", "Компрессионные шорты", 39.0, 200, "https://picsum.photos/seed/nikeshorts/600/600"),
 
-        # Beauty Shop
         (4, "Уход за кожей", "L'Oreal", ["хит продаж"], "L'Oreal Revitalift Serum", "Сыворотка с гиалуроновой кислотой 30мл", 29.99, 200, "https://picsum.photos/seed/lorealserum/600/600"),
         (4, "Уход за кожей", "Nivea", [], "Nivea Q10 Day Cream", "Дневной крем против морщин", 14.99, 300, "https://picsum.photos/seed/niveacream/600/600"),
         (4, "Уход за кожей", "Nivea", [], "Nivea Sun SPF50", "Солнцезащитный крем 200мл", 11.99, 400, "https://picsum.photos/seed/niveasun/600/600"),
@@ -219,21 +208,18 @@ def seed():
         (4, "Парфюмерия", None, ["premium", "limited edition"], "Chanel No. 5 EDP 50ml", "Легендарный аромат Chanel", 165.0, 30, "https://picsum.photos/seed/chanel5/600/600"),
         (4, "Парфюмерия", None, [], "Dior Sauvage 100ml", "Мужской аромат Dior", 145.0, 40, "https://picsum.photos/seed/diorsauvage/600/600"),
 
-        # Kids World
         (5, "Игрушки", "Lego", ["хит продаж", "семейный"], "LEGO City Police Station", "Конструктор Полицейский участок 743 детали", 99.99, 50, "https://picsum.photos/seed/legopolice/600/600"),
         (5, "Игрушки", "Lego", ["новинка"], "LEGO Star Wars Millennium Falcon", "Эпический корабль 1351 деталей", 169.99, 20, "https://picsum.photos/seed/legofalcon/600/600"),
         (5, "Игрушки", "Mattel", [], "Hot Wheels 50-pack Cars", "Набор из 50 машинок", 49.99, 80, "https://picsum.photos/seed/hotwheels/600/600"),
         (5, "Питание", None, ["эко", "органик"], "HiPP Organic Baby Cereal", "Органическая каша 200г", 5.99, 500, "https://picsum.photos/seed/hippcereal/600/600"),
         (5, "Одежда детская", "H&M", [], "H&M Kids Pajama Set", "Пижама 100% хлопок", 19.99, 150, "https://picsum.photos/seed/hmpyjama/600/600"),
 
-        # Book Store
         (6, "Художественная", "Penguin Books", [], "1984 by George Orwell", "Классическая антиутопия", 9.99, 300, "https://picsum.photos/seed/1984/600/600"),
         (6, "Художественная", "Penguin Books", ["хит продаж"], "Atomic Habits by James Clear", "Бестселлер о привычках", 14.99, 250, "https://picsum.photos/seed/atomichabits/600/600"),
         (6, "Учебная", None, [], "Python Crash Course 3rd Ed", "Учебник по Python для начинающих", 29.99, 100, "https://picsum.photos/seed/pythonbook/600/600"),
         (6, "Учебная", None, ["профессиональный"], "Designing Data-Intensive Applications", "Книга для backend-разработчиков", 49.99, 80, "https://picsum.photos/seed/dddapps/600/600"),
         (6, "Детская литература", None, [], "The Very Hungry Caterpillar", "Классическая детская книга", 7.99, 200, "https://picsum.photos/seed/caterpillar/600/600"),
 
-        # Auto Parts
         (7, "Шины", None, [], "Michelin Pilot Sport 4 225/45R17", "Летние шины премиум", 189.0, 40, "https://picsum.photos/seed/michelin/600/600"),
         (7, "Шины", None, ["зима"], "Nokian Hakkapeliitta R5 215/55R17", "Зимние шины", 219.0, 25, "https://picsum.photos/seed/nokian/600/600"),
         (7, "Масла", None, [], "Mobil 1 5W-30 4L", "Синтетическое моторное масло", 49.99, 100, "https://picsum.photos/seed/mobiloil/600/600"),
@@ -264,10 +250,8 @@ def seed():
     for l in listings:
         db.refresh(l)
 
-    # Дополнительные изображения и варианты
     print("Adding product images and variants...")
     for l in listings:
-        # 1-3 доп изображения
         for i in range(random.randint(1, 3)):
             db.add(ProductImage(
                 listing_id=l.id,
@@ -275,7 +259,6 @@ def seed():
                 is_primary=False,
                 sort_order=i + 1,
             ))
-        # У одежды и обуви — варианты по размеру
         if any(c in (l.category.name if l.category else "") for c in ("Мужская", "Женская", "Обувь", "Детская")):
             for size in random.sample(["XS", "S", "M", "L", "XL", "36", "38", "40", "42", "44"], 3):
                 db.add(ProductVariant(
@@ -287,12 +270,10 @@ def seed():
                 ))
     db.commit()
 
-    # =============== DISCOUNTS ===============
     print("Creating discounts...")
     now = datetime.now(timezone.utc).replace(tzinfo=None)
     one_month_later = now + timedelta(days=30)
 
-    # Скидка на весь магазин Beauty Shop
     db.add(Discount(
         shop_id=shops[4].id,
         scope=DiscountScope.shop,
@@ -301,7 +282,6 @@ def seed():
         starts_at=now - timedelta(days=2),
         ends_at=one_month_later,
     ))
-    # Скидка на категорию Смартфоны
     db.add(Discount(
         shop_id=shops[0].id,
         scope=DiscountScope.category,
@@ -310,7 +290,6 @@ def seed():
         starts_at=now - timedelta(days=5),
         ends_at=one_month_later,
     ))
-    # Скидка на категорию Обувь
     db.add(Discount(
         shop_id=shops[1].id,
         scope=DiscountScope.category,
@@ -319,10 +298,8 @@ def seed():
         starts_at=now - timedelta(days=1),
         ends_at=one_month_later,
     ))
-    # Скидки на отдельные топ-товары
     top_listings = [l for l in listings if "хит продаж" in [t.name for t in l.tags]]
     for l in random.sample(top_listings, min(5, len(top_listings))):
-        # ищем магазин товара
         shop = next(s for s in shops if s.owner_id == l.owner_id)
         db.add(Discount(
             shop_id=shop.id,
@@ -334,9 +311,7 @@ def seed():
         ))
     db.commit()
 
-    # =============== TAGS уже добавлены через relationship ===============
 
-    # =============== DELIVERY METHODS ===============
     print("Creating delivery methods...")
     delivery_methods = [
         DeliveryMethod(name="Самовывоз", price=0, estimated_days=1),
@@ -349,7 +324,6 @@ def seed():
         db.add(dm)
     db.commit()
 
-    # =============== COUPONS ===============
     print("Creating coupons...")
     coupons = [
         Coupon(code="WELCOME10", discount_percent=10, max_uses=100,
@@ -367,7 +341,6 @@ def seed():
         db.add(c)
     db.commit()
 
-    # =============== ADDRESSES ===============
     print("Creating addresses...")
     cities = ["Москва", "Санкт-Петербург", "Новосибирск", "Екатеринбург", "Казань", "Минск", "Алматы"]
     streets = ["ул. Ленина 12", "пр-т Мира 45", "ул. Пушкина 8", "ул. Гагарина 22", "ул. Советская 5"]
@@ -385,7 +358,6 @@ def seed():
             ))
     db.commit()
 
-    # =============== CART ITEMS ===============
     print("Adding items to carts...")
     for buyer in buyers[:10]:
         for _ in range(random.randint(1, 3)):
@@ -395,7 +367,6 @@ def seed():
             db.add(CartItem(user_id=buyer.id, listing_id=l.id, quantity=random.randint(1, 3)))
     db.commit()
 
-    # =============== FAVORITES ===============
     print("Adding favorites...")
     for buyer in buyers:
         favs = random.sample(listings, k=random.randint(2, 6))
@@ -405,7 +376,6 @@ def seed():
             db.add(Favorite(user_id=buyer.id, listing_id=l.id))
     db.commit()
 
-    # =============== RECENTLY VIEWED ===============
     print("Adding recently viewed...")
     for buyer in buyers:
         for l in random.sample(listings, k=random.randint(3, 10)):
@@ -416,7 +386,6 @@ def seed():
             ))
     db.commit()
 
-    # =============== ORDERS (с транзакциями кошельков) ===============
     print("Creating orders with wallet transactions...")
     delivery_methods_db = db.query(DeliveryMethod).all()
 
@@ -452,17 +421,13 @@ def seed():
     orders_created = []
     for status in statuses_to_create:
         buyer = random.choice(buyers)
-        # 1-3 товара в заказе
         chosen = random.sample(listings, k=random.randint(1, 3))
-        # Группируем по продавцу — для простоты берём первого
         seller_id = chosen[0].owner_id
         chosen = [c for c in chosen if c.owner_id == seller_id]
 
-        # Адрес
         addr = db.query(Address).filter(Address.user_id == buyer.id, Address.is_default == True).first()
         addr_str = f"{addr.country}, {addr.city}, {addr.street}" if addr else "Москва, ул. Ленина 1"
 
-        # Считаем сумму с учётом скидок
         seller_shop = next(s for s in shops if s.owner_id == seller_id)
         items_data = []
         subtotal = 0.0
@@ -475,12 +440,10 @@ def seed():
         delivery = random.choice(delivery_methods_db)
         total = round(subtotal + delivery.price, 2)
 
-        # Проверяем баланс
         wallet = db.query(Wallet).filter(Wallet.user_id == buyer.id).first()
         if wallet.balance < total:
             continue
 
-        # Создаём заказ
         created_at = datetime.utcnow() - timedelta(days=random.randint(0, 60))
         order = Order(
             buyer_id=buyer.id,
@@ -498,7 +461,6 @@ def seed():
             db.add(OrderItem(order_id=order.id, listing_id=l.id, quantity=qty, price=unit_price))
             l.quantity = max(0, l.quantity - qty)
 
-        # История статусов
         db.add(OrderStatusHistory(order_id=order.id, status=OrderStatus.pending, changed_at=created_at, note="Order created"))
         if status in (OrderStatus.confirmed, OrderStatus.shipped, OrderStatus.delivered):
             db.add(OrderStatusHistory(order_id=order.id, status=OrderStatus.confirmed, changed_at=created_at + timedelta(hours=2)))
@@ -509,7 +471,6 @@ def seed():
         if status == OrderStatus.cancelled:
             db.add(OrderStatusHistory(order_id=order.id, status=OrderStatus.cancelled, changed_at=created_at + timedelta(hours=5), note="Buyer cancelled"))
 
-        # Финансовые транзакции (если не отменён)
         if status != OrderStatus.cancelled:
             wallet.balance -= total
             db.add(WalletTransaction(
@@ -540,7 +501,6 @@ def seed():
 
     print(f"  Created {len(orders_created)} orders")
 
-    # =============== REVIEWS (только для delivered) ===============
     print("Creating product reviews...")
     delivered_orders = [o for o in orders_created if o.status == OrderStatus.delivered]
     review_comments = [
@@ -552,8 +512,7 @@ def seed():
     ]
     for order in delivered_orders:
         for item in order.items:
-            if random.random() < 0.7:  # 70% оставляют отзыв
-                # Проверяем что ещё не оставлял
+            if random.random() < 0.7:
                 existing = db.query(Review).filter(
                     Review.listing_id == item.listing_id,
                     Review.author_id == order.buyer_id,
@@ -570,7 +529,6 @@ def seed():
                     ))
     db.commit()
 
-    # =============== SHOP REVIEWS ===============
     print("Creating shop reviews...")
     shop_review_comments = [
         "Хороший магазин, быстрая доставка.", "Все товары соответствуют описанию.",
@@ -588,7 +546,6 @@ def seed():
             ))
     db.commit()
 
-    # =============== SHOP FOLLOWERS ===============
     print("Creating shop followers...")
     for shop in shops:
         for buyer in random.sample(buyers, k=random.randint(3, 12)):
@@ -598,7 +555,6 @@ def seed():
                 db.add(ShopFollower(shop_id=shop.id, user_id=buyer.id))
     db.commit()
 
-    # =============== SHOP BANNERS ===============
     print("Creating shop banners...")
     for i, shop in enumerate(shops):
         db.add(ShopBanner(
@@ -609,7 +565,6 @@ def seed():
         ))
     db.commit()
 
-    # =============== CHATS ===============
     print("Creating chats and messages...")
     chat_msgs = [
         "Здравствуйте! У вас есть в наличии?",
@@ -639,7 +594,6 @@ def seed():
                 ))
     db.commit()
 
-    # =============== NOTIFICATIONS ===============
     print("Creating notifications...")
     for buyer in buyers:
         for _ in range(random.randint(1, 4)):
@@ -660,7 +614,6 @@ def seed():
             ))
     db.commit()
 
-    # =============== BANNERS (маркетинговые) ===============
     print("Creating marketing banners...")
     for i in range(5):
         db.add(Banner(
@@ -672,7 +625,6 @@ def seed():
         ))
     db.commit()
 
-    # =============== FLASH SALES ===============
     print("Creating flash sales...")
     fs1 = FlashSale(
         title="Электроника-распродажа",
@@ -693,7 +645,6 @@ def seed():
     db.add(fs2)
     db.commit()
 
-    # =============== REPORTS ===============
     print("Creating reports...")
     for _ in range(5):
         db.add(Report(

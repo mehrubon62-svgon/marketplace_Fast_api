@@ -93,7 +93,6 @@ def get_store_finance(
             "transactions": [],
         }
 
-    # Все доходные транзакции
     all_q = db.query(WalletTransaction).filter(
         WalletTransaction.wallet_id == wallet.id,
         WalletTransaction.tx_type == TxType.order_income,
@@ -101,7 +100,6 @@ def get_store_finance(
     all_txs = all_q.order_by(WalletTransaction.created_at.desc()).all()
     total_income = sum(t.amount for t in all_txs)
 
-    # За период
     period_q = all_q
     if date_from:
         period_q = period_q.filter(WalletTransaction.created_at >= date_from)
@@ -110,7 +108,6 @@ def get_store_finance(
     period_txs = period_q.all()
     period_income = sum(t.amount for t in period_txs)
 
-    # Топ товаров по выручке (среди заказов магазина)
     top_q = (
         db.query(
             OrderItem.listing_id,
@@ -130,7 +127,6 @@ def get_store_finance(
         for r in top_q.all()
     ]
 
-    # Кол-во заказов магазина
     orders_count = db.query(Order).filter(Order.seller_id == seller_id).count()
 
     return {

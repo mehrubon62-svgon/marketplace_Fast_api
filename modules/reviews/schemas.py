@@ -6,7 +6,7 @@ class ReviewCreate(BaseModel):
     rating: int = Field(ge=1, le=5)
     comment: str | None = None
     listing_id: int
-    order_id: int | None = None  # обязателен если требуется проверка покупки
+    order_id: int | None = None
 
 
 class ReviewOut(BaseModel):

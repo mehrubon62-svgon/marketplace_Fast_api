@@ -11,9 +11,6 @@ from sqlalchemy import or_
 from models import Listing, Category, CartItem, Favorite, User
 
 
-# -----------------------------
-# Описание инструментов для LLM
-# -----------------------------
 TOOLS_SCHEMA = [
     {
         "type": "function",
@@ -120,9 +117,6 @@ TOOLS_SCHEMA = [
 ]
 
 
-# -----------------------------
-# Реализации инструментов
-# -----------------------------
 def search_listings(
     db: Session,
     query: Optional[str] = None,
@@ -235,7 +229,6 @@ def list_categories(db: Session):
     return [{"id": c.id, "name": c.name, "parent_id": c.parent_id} for c in cats]
 
 
-# Маршрутизатор: имя -> функция
 TOOL_FUNCTIONS = {
     "search_listings": search_listings,
     "get_listing_details": get_listing_details,
@@ -251,7 +244,6 @@ def execute_tool(name: str, args: dict, db: Session, user: Optional[User]):
     if not fn:
         return {"error": f"Неизвестный инструмент: {name}"}
 
-    # Инструменты которым нужен user
     if name in ("add_to_cart", "add_to_favorites"):
         return fn(db=db, user=user, **args)
 

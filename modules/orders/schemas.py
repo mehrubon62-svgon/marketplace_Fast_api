@@ -12,7 +12,7 @@ class OrderCreate(BaseModel):
     address: str
     coupon_code: str | None = None
     delivery_method_id: int | None = None
-    payment_method: PaymentMethodEnum | None = None  # если задан — создастся pending Payment
+    payment_method: PaymentMethodEnum | None = None
 
 
 class OrderItemOut(BaseModel):

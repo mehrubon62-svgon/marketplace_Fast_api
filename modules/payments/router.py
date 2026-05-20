@@ -51,7 +51,6 @@ def confirm(payment_id: int, db: Session = Depends(get_db), user: User = Depends
         raise HTTPException(status_code=400, detail="Payment is not in pending state")
     confirmed = confirm_payment(db, payment_id)
 
-    # уведомления обеим сторонам
     create_notification(
         db,
         user_id=confirmed.order.seller_id,

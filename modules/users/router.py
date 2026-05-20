@@ -32,8 +32,6 @@ from fastapi.security import APIKeyHeader
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
-# APIKeyHeader: Swagger покажет поле, в которое нужно ввести
-# полную строку "Bearer <token>" (как в обычных HTTP-заголовках).
 api_key_scheme = APIKeyHeader(
     name="Authorization",
     description="Введите: Bearer <ваш_токен>",
@@ -124,7 +122,6 @@ def refresh(payload: RefreshRequest, db: Session = Depends(get_db)):
     rt = get_refresh_token(db, payload.refresh_token)
     if not rt or rt.revoked:
         raise HTTPException(status_code=401, detail="Invalid refresh token")
-    # SQLite хранит DateTime без timezone; сравниваем с naive UTC
     now_naive = datetime.utcnow()
     expires_at = rt.expires_at.replace(tzinfo=None) if rt.expires_at.tzinfo else rt.expires_at
     if expires_at < now_naive:

@@ -34,9 +34,6 @@ def get_db():
         db.close()
 
 
-# -----------------------------
-# ENUMS
-# -----------------------------
 class RoleEnum(str, enum.Enum):
     user = "user"
     admin = "admin"
@@ -85,10 +82,10 @@ class NotificationType(str, enum.Enum):
 
 
 class TxType(str, enum.Enum):
-    topup = "topup"               # пополнение администратором
-    order_payment = "order_payment"  # списание за заказ (покупатель)
-    order_income = "order_income"    # доход магазина за заказ
-    refund = "refund"             # возврат
+    topup = "topup"
+    order_payment = "order_payment"
+    order_income = "order_income"
+    refund = "refund"
 
 
 class DiscountScope(str, enum.Enum):
@@ -97,9 +94,6 @@ class DiscountScope(str, enum.Enum):
     shop = "shop"
 
 
-# -----------------------------
-# Many-to-many tables
-# -----------------------------
 listing_tags = Table(
     "listing_tags",
     Base.metadata,
@@ -115,9 +109,6 @@ flash_sale_listings = Table(
 )
 
 
-# -----------------------------
-# USERS
-# -----------------------------
 class User(Base):
     __tablename__ = "users"
 
@@ -186,9 +177,6 @@ class Address(Base):
     user = relationship("User", back_populates="addresses")
 
 
-# -----------------------------
-# SHOPS
-# -----------------------------
 class Shop(Base):
     __tablename__ = "shops"
 
@@ -243,9 +231,6 @@ class ShopFollower(Base):
     user = relationship("User", back_populates="shop_followers")
 
 
-# -----------------------------
-# CATEGORIES / BRANDS / TAGS
-# -----------------------------
 class Category(Base):
     __tablename__ = "categories"
 
@@ -276,9 +261,6 @@ class Tag(Base):
     listings = relationship("Listing", secondary=listing_tags, back_populates="tags")
 
 
-# -----------------------------
-# LISTINGS
-# -----------------------------
 class Listing(Base):
     __tablename__ = "listings"
 
@@ -324,7 +306,7 @@ class ProductVariant(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     listing_id = Column(Integer, ForeignKey("listings.id"), nullable=False)
-    name = Column(String, nullable=False)  # пример: "Размер 42 / Чёрный"
+    name = Column(String, nullable=False)
     price = Column(Float, nullable=False)
     quantity = Column(Integer, default=0)
     sku = Column(String, nullable=True)
@@ -344,9 +326,6 @@ class RecentlyViewed(Base):
     listing = relationship("Listing", back_populates="recently_viewed")
 
 
-# -----------------------------
-# ORDERS / PAYMENTS / SHIPMENTS
-# -----------------------------
 class Order(Base):
     __tablename__ = "orders"
 
@@ -447,9 +426,6 @@ class Shipment(Base):
     order = relationship("Order", back_populates="shipment")
 
 
-# -----------------------------
-# COUPONS
-# -----------------------------
 class Coupon(Base):
     __tablename__ = "coupons"
 
@@ -479,9 +455,6 @@ class CouponUsage(Base):
     order = relationship("Order")
 
 
-# -----------------------------
-# REVIEWS
-# -----------------------------
 class Review(Base):
     __tablename__ = "reviews"
 
@@ -536,9 +509,6 @@ class ReviewVote(Base):
     user = relationship("User")
 
 
-# -----------------------------
-# CART / FAVORITES
-# -----------------------------
 class CartItem(Base):
     __tablename__ = "cart_items"
 
@@ -562,9 +532,6 @@ class Favorite(Base):
     listing = relationship("Listing", back_populates="favorites")
 
 
-# -----------------------------
-# CHAT
-# -----------------------------
 class Chat(Base):
     __tablename__ = "chats"
 
@@ -592,9 +559,6 @@ class Message(Base):
     sender = relationship("User")
 
 
-# -----------------------------
-# AI CHAT (с агентом)
-# -----------------------------
 class AIChatSession(Base):
     __tablename__ = "ai_chat_sessions"
 
@@ -610,7 +574,7 @@ class AIChatMessage(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     session_id = Column(Integer, ForeignKey("ai_chat_sessions.id"), nullable=False)
-    role = Column(String, nullable=False)  # user / assistant / tool
+    role = Column(String, nullable=False)
     content = Column(Text, nullable=True)
     tool_calls = Column(JSON, nullable=True)
     tool_call_id = Column(String, nullable=True)
@@ -619,9 +583,6 @@ class AIChatMessage(Base):
     session = relationship("AIChatSession", back_populates="messages")
 
 
-# -----------------------------
-# NOTIFICATIONS
-# -----------------------------
 class Notification(Base):
     __tablename__ = "notifications"
 
@@ -636,9 +597,6 @@ class Notification(Base):
     user = relationship("User", back_populates="notifications")
 
 
-# -----------------------------
-# MARKETING
-# -----------------------------
 class Banner(Base):
     __tablename__ = "banners"
 
@@ -664,15 +622,12 @@ class FlashSale(Base):
     listings = relationship("Listing", secondary=flash_sale_listings, backref="flash_sales")
 
 
-# -----------------------------
-# REPORTS
-# -----------------------------
 class Report(Base):
     __tablename__ = "reports"
 
     id = Column(Integer, primary_key=True, index=True)
     reporter_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    target_type = Column(String, nullable=False)  # listing / user / review / shop
+    target_type = Column(String, nullable=False)
     target_id = Column(Integer, nullable=False)
     reason = Column(Text, nullable=False)
     status = Column(SQLEnum(ReportStatus), default=ReportStatus.open, nullable=False)
@@ -681,9 +636,6 @@ class Report(Base):
     reporter = relationship("User")
 
 
-# -----------------------------
-# WALLET / FINANCE
-# -----------------------------
 class Wallet(Base):
     __tablename__ = "wallets"
 
@@ -701,7 +653,7 @@ class WalletTransaction(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     wallet_id = Column(Integer, ForeignKey("wallets.id"), nullable=False)
-    amount = Column(Float, nullable=False)  # положительный = доход, отрицательный = расход
+    amount = Column(Float, nullable=False)
     tx_type = Column(SQLEnum(TxType), nullable=False)
     description = Column(Text, nullable=True)
     order_id = Column(Integer, ForeignKey("orders.id"), nullable=True)
@@ -711,16 +663,12 @@ class WalletTransaction(Base):
     order = relationship("Order")
 
 
-# -----------------------------
-# DISCOUNTS (на товар / категорию / весь магазин)
-# -----------------------------
 class Discount(Base):
     __tablename__ = "discounts"
 
     id = Column(Integer, primary_key=True, index=True)
     shop_id = Column(Integer, ForeignKey("shops.id"), nullable=False)
     scope = Column(SQLEnum(DiscountScope), nullable=False)
-    # target_id: listing_id если scope=product, category_id если scope=category, NULL если scope=shop
     target_id = Column(Integer, nullable=True)
     discount_percent = Column(Float, nullable=False)
     starts_at = Column(DateTime, nullable=False)

@@ -29,7 +29,6 @@ from modules.marketing.crud import (
 router = APIRouter(prefix="/marketing", tags=["Marketing"])
 
 
-# ---- Banners ----
 @router.get("/banners", response_model=list[BannerOut])
 def list_banners(db: Session = Depends(get_db)):
     return get_active_banners(db)
@@ -47,7 +46,6 @@ def remove_banner(banner_id: int, db: Session = Depends(get_db), admin: User = D
     return {"detail": "Banner deleted"}
 
 
-# ---- Flash sales ----
 def _validate_listings(db: Session, listing_ids: list[int], user: User) -> list[Listing]:
     """Проверяет, что все товары существуют и принадлежат пользователю (или он админ)."""
     listings = db.query(Listing).filter(Listing.id.in_(listing_ids)).all()
@@ -114,7 +112,6 @@ def edit_flash_sale(
     if not fs:
         raise HTTPException(status_code=404, detail="Flash sale not found")
 
-    # доступ: админ или владелец всех товаров акции
     if user.role.value != "admin":
         not_owned = [l.id for l in fs.listings if l.owner_id != user.id]
         if not_owned:

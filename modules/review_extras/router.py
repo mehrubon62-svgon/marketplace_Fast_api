@@ -30,7 +30,6 @@ def _get_review(db: Session, review_id: int) -> Review:
     return review
 
 
-# ---- Reply ----
 @router.post("/{review_id}/reply", response_model=ReviewReplyOut)
 def reply_to_review(
     review_id: int,
@@ -55,7 +54,6 @@ def fetch_reply(review_id: int, db: Session = Depends(get_db)):
     return reply
 
 
-# ---- Images ----
 @router.post("/{review_id}/images", response_model=ReviewImageOut)
 def upload_review_image(
     review_id: int,
@@ -75,7 +73,6 @@ def list_review_images(review_id: int, db: Session = Depends(get_db)):
     return get_images(db, review_id)
 
 
-# ---- Votes ----
 @router.post("/{review_id}/vote", response_model=ReviewVoteOut)
 def vote(
     review_id: int,

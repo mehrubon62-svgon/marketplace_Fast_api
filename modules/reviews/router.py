@@ -39,7 +39,6 @@ def add_review(data: ReviewCreate, db: Session = Depends(get_db), current_user: 
     if order.status != OrderStatus.delivered:
         raise HTTPException(status_code=400, detail="Can only review after order is delivered")
 
-    # Проверка что товар был в этом заказе
     has_item = db.query(OrderItem).filter(
         OrderItem.order_id == order.id, OrderItem.listing_id == data.listing_id
     ).first()

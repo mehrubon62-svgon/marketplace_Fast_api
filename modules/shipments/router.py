@@ -69,7 +69,6 @@ def edit(
     return update_shipment(db, shipment_id, **data.model_dump(exclude_unset=True))
 
 
-# ---- Delivery methods ----
 @router.get("/delivery-methods", response_model=list[DeliveryMethodOut])
 def list_delivery_methods(db: Session = Depends(get_db)):
     return get_all_delivery_methods(db)

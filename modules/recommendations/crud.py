@@ -54,7 +54,6 @@ def find_similar(db: Session, listing_id: int, limit: int = 10) -> List[dict]:
         if not cand.embedding:
             ensure_embedding(db, cand)
         score = cosine_similarity(target.embedding, cand.embedding or [])
-        # лёгкий бонус за совпадение категории
         if cand.category_id == target.category_id:
             score += 0.05
         scored.append((cand, score))

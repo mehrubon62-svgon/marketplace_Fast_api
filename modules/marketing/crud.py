@@ -4,7 +4,6 @@ from sqlalchemy import and_
 from models import Banner, FlashSale, Listing
 
 
-# ---- Banners ----
 def create_banner(db: Session, **kwargs) -> Banner:
     b = Banner(**kwargs)
     db.add(b)
@@ -26,7 +25,6 @@ def delete_banner(db: Session, banner_id: int) -> bool:
     return True
 
 
-# ---- Flash sales ----
 def create_flash_sale(
     db: Session,
     listing_ids: list[int],

@@ -4,7 +4,7 @@ from models import ReportStatus
 
 
 class ReportCreate(BaseModel):
-    target_type: str  # listing / user / review / shop
+    target_type: str
     target_id: int
     reason: str
 

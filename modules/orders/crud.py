@@ -40,7 +40,6 @@ def create_order_from_cart(
 
     for cart_item in items:
         listing = cart_item.listing
-        # Используем дисконтированную цену, если передана
         unit_price = item_prices.get(cart_item.id, listing.price) if item_prices else listing.price
         item_price = unit_price * cart_item.quantity
         subtotal += item_price

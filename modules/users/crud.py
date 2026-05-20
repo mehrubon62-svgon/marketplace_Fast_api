@@ -32,7 +32,6 @@ def create_user(db: Session, username: str, email: str, password: str, role: Rol
     user = User(username=username, email=email, hashed_password=hashed, role=role)
     db.add(user)
     db.flush()
-    # Автосоздание кошелька с балансом 0
     wallet = Wallet(user_id=user.id, balance=0.0)
     db.add(wallet)
     db.commit()
@@ -44,7 +43,6 @@ def get_all_users(db: Session):
     return db.query(User).all()
 
 
-# ------ Refresh tokens ------
 def create_refresh_token(db: Session, user_id: int) -> RefreshToken:
     token = secrets.token_urlsafe(48)
     expires_at = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
@@ -75,7 +73,6 @@ def revoke_all_user_tokens(db: Session, user_id: int):
     db.commit()
 
 
-# ------ Profile ------
 def get_or_create_profile(db: Session, user_id: int) -> UserProfile:
     profile = db.query(UserProfile).filter(UserProfile.user_id == user_id).first()
     if not profile:

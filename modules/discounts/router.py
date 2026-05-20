@@ -93,7 +93,6 @@ def remove_discount(
     return {"detail": "Discount deactivated"}
 
 
-# Публичный эндпоинт для проверки цены товара со скидкой
 public_router = APIRouter(prefix="/discounts", tags=["Discounts"])
 
 

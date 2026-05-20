@@ -49,7 +49,7 @@ class ShopDetailOut(BaseModel):
     status: ShopStatus
     owner: ShopOwnerShort
     created_at: datetime
-    rating_avg: float | None  # средний рейтинг по отзывам на магазин
+    rating_avg: float | None
     reviews_count: int
     followers_count: int
     listings_count: int

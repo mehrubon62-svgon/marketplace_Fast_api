@@ -2,7 +2,6 @@ from sqlalchemy.orm import Session
 from models import ShopReview, ShopBanner, ShopFollower, Shop
 
 
-# ---- Reviews ----
 def create_shop_review(db: Session, shop_id: int, author_id: int, rating: int, comment: str | None) -> ShopReview:
     r = ShopReview(shop_id=shop_id, author_id=author_id, rating=rating, comment=comment)
     db.add(r)
@@ -24,7 +23,6 @@ def delete_shop_review(db: Session, review_id: int) -> bool:
     return True
 
 
-# ---- Banners ----
 def create_shop_banner(db: Session, shop_id: int, **kwargs) -> ShopBanner:
     b = ShopBanner(shop_id=shop_id, **kwargs)
     db.add(b)
@@ -46,7 +44,6 @@ def delete_shop_banner(db: Session, banner_id: int) -> ShopBanner | None:
     return b
 
 
-# ---- Followers ----
 def follow_shop(db: Session, shop_id: int, user_id: int) -> ShopFollower:
     existing = (
         db.query(ShopFollower)

@@ -61,14 +61,12 @@ async def checkout(data: OrderCreate, db: Session = Depends(get_db), current_use
         if item.quantity > item.listing.quantity:
             raise HTTPException(status_code=400, detail=f"Not enough stock for '{item.listing.title}'")
 
-    # Применяем скидки и считаем итоги по каждому товару
-    item_prices = {}  # cart_item.id -> effective unit price
+    item_prices = {}
     for item in cart_items:
         discount = get_best_discount_for_listing(db, item.listing)
         effective = calculate_final_price(item.listing.price, discount)
         item_prices[item.id] = effective
 
-    # Купон (применяется поверх скидок)
     coupon = None
     if data.coupon_code:
         coupon = get_coupon_by_code(db, data.coupon_code)
@@ -88,17 +86,14 @@ async def checkout(data: OrderCreate, db: Session = Depends(get_db), current_use
         if not delivery_method:
             raise HTTPException(status_code=404, detail="Delivery method not found")
 
-    # Группируем по продавцу
     sellers: dict[int, list] = {}
     for item in cart_items:
         sellers.setdefault(item.listing.owner_id, []).append(item)
 
-    # Считаем суммарную стоимость для проверки баланса
     grand_total = 0.0
     seller_totals = {}
     for seller_id, items in sellers.items():
         subtotal = sum(item_prices[i.id] * i.quantity for i in items)
-        # купон применяется к каждому подзаказу (как и было)
         discount_coupon = 0.0
         if coupon:
             if coupon.discount_percent:
@@ -110,7 +105,6 @@ async def checkout(data: OrderCreate, db: Session = Depends(get_db), current_use
         seller_totals[seller_id] = total
         grand_total += total
 
-    # Проверка баланса покупателя
     buyer_wallet = get_or_create_wallet(db, current_user.id)
     if buyer_wallet.balance < grand_total:
         raise HTTPException(
@@ -118,13 +112,8 @@ async def checkout(data: OrderCreate, db: Session = Depends(get_db), current_use
             detail=f"Insufficient balance. Need {grand_total:.2f}, have {buyer_wallet.balance:.2f}",
         )
 
-    # Создаём заказы (внутри create_order_from_cart обновляются цены items с учётом скидок:
-    # передаём item_prices)
     orders = []
     for seller_id, items in sellers.items():
-        # Подменяем цены товаров временно для передачи в create_order_from_cart
-        # (внутри он берёт listing.price; нам нужно учесть скидку)
-        # Создаём заказ через прямую вставку, чтобы передать дисконтированные цены.
         order = create_order_from_cart(
             db, current_user.id, seller_id, data.address, items, coupon, delivery_method,
             item_prices=item_prices,
@@ -135,9 +124,7 @@ async def checkout(data: OrderCreate, db: Session = Depends(get_db), current_use
 
         orders.append(order)
 
-    # Финансовые операции — атомарно
     try:
-        # Списание у покупателя
         add_transaction(
             db,
             buyer_wallet,
@@ -147,7 +134,6 @@ async def checkout(data: OrderCreate, db: Session = Depends(get_db), current_use
             order_id=orders[0].id if orders else None,
             commit=False,
         )
-        # Зачисление каждому магазину
         for seller_id, total in seller_totals.items():
             seller_wallet = get_or_create_wallet(db, seller_id)
             order_for_seller = next(o for o in orders if o.seller_id == seller_id)
@@ -165,7 +151,6 @@ async def checkout(data: OrderCreate, db: Session = Depends(get_db), current_use
         db.rollback()
         raise
 
-    # Уведомления и realtime
     for order in orders:
         create_notification(
             db,
@@ -254,7 +239,6 @@ async def change_order_status(
 
     updated = update_order_status(db, order_id, data.status, data.note)
 
-    # Если заказ отменён — возвращаем средства покупателю и списываем у магазина
     if data.status == OrderStatus.cancelled and order.total_price > 0:
         try:
             buyer_wallet = get_or_create_wallet(db, order.buyer_id)

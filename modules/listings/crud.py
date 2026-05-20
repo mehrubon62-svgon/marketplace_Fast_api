@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from models import Listing
 
 
-# Поля, изменение которых должно сбросить embedding
 EMBEDDING_AFFECTING_FIELDS = {"title", "description"}
 
 
@@ -40,7 +39,6 @@ def get_listings_by_category(db: Session, category_id: int):
     """Возвращает товары категории, включая все её подкатегории (рекурсивно)."""
     from models import Category
 
-    # собираем id категории и её потомков
     ids = {category_id}
     queue = [category_id]
     while queue:
@@ -79,7 +77,7 @@ def update_listing(db: Session, listing_id: int, **kwargs):
                 embedding_dirty = True
 
     if embedding_dirty:
-        listing.embedding = None  # будет пересчитан по запросу
+        listing.embedding = None
 
     db.commit()
     db.refresh(listing)

@@ -71,7 +71,6 @@ async def send_message(
     _check_chat_access(chat, user)
     msg = add_message(db, chat_id, user.id, data.text)
 
-    # уведомление получателю
     recipient_id = chat.user_b_id if chat.user_a_id == user.id else chat.user_a_id
     preview = data.text if len(data.text) <= 80 else data.text[:77] + "..."
     create_notification(
@@ -81,7 +80,6 @@ async def send_message(
         body=preview,
         type=NotificationType.chat,
     )
-    # Realtime
     await manager.send_personal(recipient_id, {
         "event": "new_message",
         "chat_id": chat_id,

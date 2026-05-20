@@ -87,7 +87,6 @@ def run_agent(
     """
     client = get_ai_client()
 
-    # сохраняем сообщение пользователя
     _save_message(db, session, role="user", content=user_message)
 
     messages = _load_history(db, session)
@@ -106,7 +105,6 @@ def run_agent(
         msg = completion.choices[0].message
         tool_calls = msg.tool_calls or []
 
-        # сериализуем tool_calls для сохранения и для следующего запроса
         serialized_tool_calls = None
         if tool_calls:
             serialized_tool_calls = [
@@ -121,7 +119,6 @@ def run_agent(
                 for tc in tool_calls
             ]
 
-        # сохраняем сообщение ассистента (даже если оно с tool_calls, content может быть пустым)
         _save_message(
             db,
             session,
@@ -130,18 +127,15 @@ def run_agent(
             tool_calls=serialized_tool_calls,
         )
 
-        # добавляем в local messages
         assistant_msg: Dict[str, Any] = {"role": "assistant", "content": msg.content}
         if serialized_tool_calls:
             assistant_msg["tool_calls"] = serialized_tool_calls
         messages.append(assistant_msg)
 
-        # если модель не запросила инструмент — это финальный ответ
         if not tool_calls:
             final_response = msg.content or ""
             break
 
-        # выполняем все tool calls
         for tc in tool_calls:
             tool_name = tc.function.name
             try:
@@ -170,7 +164,6 @@ def run_agent(
                 }
             )
 
-        # цикл продолжается: модель увидит результаты инструментов и сформирует ответ
 
     if final_response is None:
         final_response = (

@@ -43,12 +43,9 @@ async def ws_endpoint(
 
     await manager.connect(websocket, user.id)
     try:
-        # Приветствие
         await websocket.send_json({"event": "connected", "user_id": user.id})
-        # Держим соединение, можно слушать ping или текстовые команды от клиента
         while True:
             data = await websocket.receive_text()
-            # эхо для проверки живости
             await websocket.send_json({"event": "ack", "echo": data})
     except WebSocketDisconnect:
         await manager.disconnect(websocket, user.id)

@@ -45,7 +45,6 @@ async def admin_topup(
     description = data.description or f"Пополнение администратором ({admin.username})"
     add_transaction(db, wallet, data.amount, TxType.topup, description)
 
-    # Уведомление
     create_notification(
         db,
         user_id=data.user_id,
@@ -54,7 +53,6 @@ async def admin_topup(
         type=NotificationType.wallet,
     )
 
-    # Realtime
     await manager.send_personal(data.user_id, {
         "event": "wallet_topup",
         "amount": data.amount,

@@ -32,7 +32,6 @@ def _get_shop_or_404(db: Session, shop_id: int) -> Shop:
     return shop
 
 
-# ---- Reviews ----
 @router.get("/{shop_id}/reviews", response_model=list[ShopReviewOut])
 def list_shop_reviews(shop_id: int, db: Session = Depends(get_db)):
     _get_shop_or_404(db, shop_id)
@@ -72,7 +71,6 @@ def remove_shop_review(
     return {"detail": "Review deleted"}
 
 
-# ---- Banners ----
 @router.get("/{shop_id}/banners", response_model=list[ShopBannerOut])
 def list_banners(shop_id: int, db: Session = Depends(get_db)):
     _get_shop_or_404(db, shop_id)
@@ -110,7 +108,6 @@ def remove_banner(
     return {"detail": "Banner deleted"}
 
 
-# ---- Followers ----
 @router.post("/{shop_id}/follow", response_model=ShopFollowerOut)
 def follow(
     shop_id: int,

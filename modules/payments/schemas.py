@@ -23,7 +23,7 @@ class PaymentOut(BaseModel):
 
 class RefundCreate(BaseModel):
     payment_id: int
-    amount: float | None = None  # если None — полный возврат
+    amount: float | None = None
     reason: str | None = None
 
 

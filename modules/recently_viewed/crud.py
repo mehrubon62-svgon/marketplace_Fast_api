@@ -22,7 +22,6 @@ def track_view(db: Session, user_id: int, listing_id: int) -> RecentlyViewed:
     db.commit()
     db.refresh(rv)
 
-    # обрезаем историю до LIMIT записей
     extras = (
         db.query(RecentlyViewed)
         .filter(RecentlyViewed.user_id == user_id)

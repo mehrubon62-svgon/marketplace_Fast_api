@@ -5,7 +5,7 @@ from models import DiscountScope
 
 class DiscountCreate(BaseModel):
     scope: DiscountScope
-    target_id: int | None = None  # listing_id (scope=product), category_id (scope=category), None (scope=shop)
+    target_id: int | None = None
     discount_percent: float = Field(..., gt=0, le=100)
     starts_at: datetime
     ends_at: datetime

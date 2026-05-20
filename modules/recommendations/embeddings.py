@@ -13,7 +13,6 @@ _model = None
 def get_model():
     global _model
     if _model is None:
-        # Импорт внутри функции, чтобы тяжёлая зависимость грузилась лениво
         from sentence_transformers import SentenceTransformer
         _model = SentenceTransformer(EMBEDDING_MODEL)
     return _model

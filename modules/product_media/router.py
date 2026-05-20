@@ -30,7 +30,6 @@ def _check_listing_owner(db: Session, listing_id: int, user: User) -> Listing:
     return listing
 
 
-# ---- Images ----
 @router.get("/{listing_id}/images", response_model=list[ProductImageOut])
 def list_images(listing_id: int, db: Session = Depends(get_db)):
     return get_images(db, listing_id)
@@ -62,7 +61,6 @@ def remove_image(
     return {"detail": "Image deleted"}
 
 
-# ---- Variants ----
 @router.get("/{listing_id}/variants", response_model=list[ProductVariantOut])
 def list_variants(listing_id: int, db: Session = Depends(get_db)):
     return get_variants(db, listing_id)
